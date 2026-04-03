@@ -107,6 +107,27 @@ def admin():
     conn.close()
 
     return render_template('admin.html', data=data)
+def init_db():
+    import sqlite3
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    c.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS candidates (id INTEGER PRIMARY KEY, name TEXT, votes INTEGER)")
+    c.execute("CREATE TABLE IF NOT EXISTS votes (user_id INTEGER, candidate_id INTEGER)")
+
+    # Add default candidates if empty
+    c.execute("SELECT COUNT(*) FROM candidates")
+    if c.fetchone()[0] == 0:
+        c.execute("INSERT INTO candidates (name, votes) VALUES ('Candidate A', 0)")
+        c.execute("INSERT INTO candidates (name, votes) VALUES ('Candidate B', 0)")
+        c.execute("INSERT INTO candidates (name, votes) VALUES ('Candidate C', 0)")
+
+    conn.commit()
+    conn.close()
+
+import os
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    init_db()
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
