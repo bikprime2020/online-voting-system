@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+    <a href="/vote">Vote</a>
+    <a href="/result">Results</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="container">
+    <h2>Results</h2>
+
+    {% for r in data %}
+        <p><b>{{r[0]}}</b> : {{r[1]}} votes</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>
